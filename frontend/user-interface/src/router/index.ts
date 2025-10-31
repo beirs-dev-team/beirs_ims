@@ -5,6 +5,8 @@ import LandingPage from '@/views/LandingPage/LandingPage.vue'
 import LoginPage from '@/views/LandingPage/LoginPage/LoginPage.vue'
 import RegistrationPage from '@/views/LandingPage/RegisterPage/RegistrationPage.vue'
 import ServicesPage from '@/views/LandingPage/ServicesPage/ServicesPage.vue'
+import DashBoardPage from '@/views/ResidentPage/DashBoardPage.vue'
+
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -52,6 +54,15 @@ const routes: RouteRecordRaw[] = [
           title: 'Services',
         },
       },
+
+      {
+        path: '/dashboard',
+        name: 'DashboardPage',
+        component: DashBoardPage,
+        meta: {
+          title: 'Dashboard',
+        }
+      }
     ],
   },
 ]

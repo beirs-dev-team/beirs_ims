@@ -16,9 +16,7 @@
 </template>
 
 <style scoped>
-h1 {color: black; font-family: Arial; text-align: center; text: bold}
+h1 {color: black; font-family: Arial, Helvetica, sans-serif; text-align: center;}
 .alert-success {font-size: large; font-family: Arial, Helvetica, sans-serif;}
-
-
 
 </style>

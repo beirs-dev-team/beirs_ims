@@ -17,6 +17,38 @@ const navItems = [
     label: 'Services'
   },
 ]
+
+const loggedNav = [
+  {
+    path: '/',
+    label: 'Home'
+  },
+
+  {
+    path: '/',
+    label: 'File A Blotter'
+  },
+
+  {
+    path: '/',
+    label: 'View Status'
+  },
+
+  {
+    path: '/',
+    label: 'Certifications'
+  },
+
+  {
+    path: '/',
+    label: 'My Account'
+  },
+
+  {
+    path: '/',
+    label: 'Sign Out'
+  },
+]
 </script>
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-primary-gradient">
