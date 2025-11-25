@@ -276,7 +276,13 @@ class BlotterReportsController extends Controller
             $path = "blotter-evidences/{$blotterReport->id}/{$filename}";
 
             // Upload to Supabase S3
-            Storage::disk('supabase')->put($path, file_get_contents($file));
+            Storage::disk('supabase')->put(
+                $path,
+                file_get_contents($file),
+                [
+                    'ContentType' => $file->getClientMimeType(),
+                ]
+            );
 
             $blotterReport->evidence()->create([
                 'storage_path' => $path,

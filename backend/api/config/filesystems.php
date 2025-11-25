@@ -70,13 +70,15 @@ return [
 
         'supabase' => [
             'driver' => 's3',
-            'key' => env('SUPABASE_SERVICE_KEY'),
-            'secret' => env('SUPABASE_SERVICE_SECRET'),
+            'key' => env('SUPABASE_ACCESS_KEY_ID'),
+            'secret' => env('SUPABASE_SECRET_ACCESS_KEY'),
             'region' => 'us-east-1', // arbitrary; Supabase ignores region
             'bucket' => env('SUPABASE_BUCKET'),
             'endpoint' => env('SUPABASE_S3_ENDPOINT'),
             'use_path_style_endpoint' => true,
             'throw' => false,
+            'report' => false,
+            'visibility' => 'private',
         ],
 
 

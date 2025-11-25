@@ -39,5 +39,6 @@ npm run lint
 ```
 
 ## Environment variables
-- Copy `.env.example` to `.env.local` for local development. The defaults target `http://localhost:8000/api` for the Laravel API and `http://localhost:8000/storage` for public assets.
+- Copy `.env.example` to `.env.local` for local development. The defaults target `http://localhost:8000/api` for the Laravel API and `http://localhost:8000/storage` for downloads served by the API.
 - On Vercel, add `VITE_API_BASE_URL` and `VITE_STORAGE_URL` under **Project Settings → Environment Variables** pointing to your Render backend (e.g., `https://<render-service>.onrender.com/api` and `/storage`).
+- If your backend stores media in Supabase, keep `VITE_STORAGE_URL` pointing at the API `/storage` route (or your CDN in front of it). The API will resolve or sign Supabase object URLs as needed, so you do not need to point the frontend directly at Supabase buckets.

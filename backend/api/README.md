@@ -35,3 +35,17 @@ Use `.env.example` as the source of truth for both local development and Render 
 - In Render, create environment variables using the _Render deployment_ block in `.env.example` (Render provides `RENDER_EXTERNAL_URL`, `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, and `DATABASE_URL`).
 - Point `FRONTEND_URL`, `CORS_ALLOWED_ORIGINS`, and `SANCTUM_STATEFUL_DOMAINS` to your Vercel domain so CORS and Sanctum cookies work in production.
 - Keep `APP_ENV=production` and `APP_DEBUG=false` for the hosted service.
+
+## Supabase Storage setup
+The API uploads IDs and blotter evidences to Supabase using the S3-compatible driver. To make uploads work:
+
+1. In Supabase, go to **Project Settings → Storage → S3 Access** and generate an **Access key ID** and **Secret access key**. Copy the endpoint shown there (e.g., `https://<project-ref>.supabase.co/storage/v1/s3`).
+2. Create or choose a bucket for uploads (e.g., `beirs-media`). Buckets are **private by default**—keep them private for restricted access or add a read policy if you want public objects. For private buckets, expose downloads via signed URLs (e.g., Storage API `object/sign`).
+3. Set these values in `.env`:
+   - `SUPABASE_ACCESS_KEY_ID`
+   - `SUPABASE_SECRET_ACCESS_KEY`
+   - `SUPABASE_BUCKET`
+   - `SUPABASE_S3_ENDPOINT`
+4. If you want Supabase to be the default filesystem, set `FILESYSTEM_DISK=supabase` (otherwise the code explicitly selects the `supabase` disk where needed).
+
+Uploaded files will live under the bucket path you configure (e.g., `government-ids/{userProfileId}/` and `blotter-evidences/{blotterReportId}/`). For public buckets, files can be viewed at `https://<project-ref>.supabase.co/storage/v1/object/public/<bucket>/<path>`.

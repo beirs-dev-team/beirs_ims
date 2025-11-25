@@ -194,7 +194,13 @@ class UsersController extends Controller
             $path = "government-ids/{$userProfile->id}/{$filename}";
 
             // Upload to Supabase S3
-            Storage::disk('supabase')->put($path, file_get_contents($file));
+            Storage::disk('supabase')->put(
+                $path,
+                file_get_contents($file),
+                [
+                    'ContentType' => $file->getClientMimeType(),
+                ]
+            );
             Log::info('gov-id.update.saved', ['path' => $path]);
 
             $userProfile->governmentIdentity()->updateOrCreate(
