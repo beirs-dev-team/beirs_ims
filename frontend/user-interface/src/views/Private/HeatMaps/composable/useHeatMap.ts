@@ -58,9 +58,18 @@ export function useHeatMap() {
     const lats = section.coords.map(([lat]) => lat)
     const lngs = section.coords.map(([, lng]) => lng)
 
+    const minLat = Math.min(...lats)
+    const maxLat = Math.max(...lats)
+    const minLng = Math.min(...lngs)
+    const maxLng = Math.max(...lngs)
+
     return {
-      latSpan: Math.max(...lats) - Math.min(...lats),
-      lngSpan: Math.max(...lngs) - Math.min(...lngs),
+      latSpan: maxLat - minLat,
+      lngSpan: maxLng - minLng,
+      minLat,
+      maxLat,
+      minLng,
+      maxLng,
     }
   }
 
@@ -94,19 +103,48 @@ export function useHeatMap() {
   }
 
   const iconOffsetRatios: Record<Exclude<CaseType, 'total'>, [number, number]> = {
-    theft: [-0.45, -0.35],
-    vandalism: [-0.2, 0.12],
-    'animal-related': [0.05, 0.35],
-    trespassing: [0.42, 0.08],
-    'personal-conflict': [-0.32, 0.28],
-    'noice-disturbance': [0.22, -0.28],
-    'harrasment-threat': [0.3, 0.22],
-    'physical-injury': [0.36, -0.36],
-    'domestic-dispute': [-0.08, 0.32],
-    'curfew-violation': [0.18, -0.32],
-    'public-disturbance': [-0.28, -0.18],
-    'lost-and-found': [0.18, 0.18],
-    'brgy-service-complaint': [-0.18, 0.08],
+    theft: [0, 0.38],
+    vandalism: [0.18, 0.34],
+    'animal-related': [0.31, 0.22],
+    trespassing: [0.38, 0.05],
+    'personal-conflict': [0.36, -0.13],
+    'noice-disturbance': [0.25, -0.28],
+    'harrasment-threat': [0.09, -0.37],
+    'physical-injury': [-0.09, -0.37],
+    'domestic-dispute': [-0.25, -0.28],
+    'curfew-violation': [-0.36, -0.13],
+    'public-disturbance': [-0.38, 0.05],
+    'lost-and-found': [-0.31, 0.22],
+    'brgy-service-complaint': [-0.18, 0.34],
+  }
+
+  const sectionCenterShiftRatios: Record<string, [number, number]> = {
+    liong: [0.14, 0.15],
+    mabolo: [-0.12, -0.1],
+    perez: [0.18, 0.25],
+    'pulang-bukid': [0.08, 0.1],
+    'sapang-daan': [0.1, 0.18],
+    tinago: [0.05, -0.05],
+  }
+
+  const sectionOffsetScale: Record<string, number> = {
+    liong: 0.48,
+    mabolo: 0.36,
+    perez: 0.38,
+    'pulang-bukid': 0.32,
+    'sapang-daan': 0.4,
+    tinago: 0.22,
+  }
+
+  const getAdjustedCentroid = (section: Section) => {
+    const baseCentroid = getPolygonCentroid(section.coords)
+    const { latSpan, lngSpan, minLat, maxLat, minLng, maxLng } = getSectionExtents(section)
+    const [latRatio, lngRatio] = sectionCenterShiftRatios[section.id] ?? [0, 0]
+
+    const shiftedLat = clamp(baseCentroid[0] + latRatio * latSpan, minLat, maxLat)
+    const shiftedLng = clamp(baseCentroid[1] + lngRatio * lngSpan, minLng, maxLng)
+
+    return [shiftedLat, shiftedLng] as [number, number]
   }
 
   const getIconOffset = (section: Section, type: Exclude<CaseType, 'total'>): [number, number] => {
@@ -116,21 +154,20 @@ export function useHeatMap() {
     const safeLatSpan = latSpan || 1
     const safeLngSpan = lngSpan || 1
     const minSpan = Math.min(safeLatSpan, safeLngSpan)
-    const maxSpan = Math.max(safeLatSpan, safeLngSpan)
 
-    const baseSpacing = Math.min(Math.max(minSpan * 0.36, 10), 38)
-    const scatterScale = Math.min(Math.max(maxSpan * 0.25, 8), 55)
+    const jitterScale = Math.min(Math.max(minSpan * 0.08, 2), 12)
+    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * jitterScale
+    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * jitterScale
 
-    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * scatterScale
-    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * scatterScale
+    const offsetScale = sectionOffsetScale[section.id] ?? 0.42
 
     const latOffset = clamp(
-      latRatio * baseSpacing + jitterLat,
+      latRatio * safeLatSpan * offsetScale + jitterLat,
       -safeLatSpan * 0.45,
       safeLatSpan * 0.45
     )
     const lngOffset = clamp(
-      lngRatio * baseSpacing + jitterLng,
+      lngRatio * safeLngSpan * offsetScale + jitterLng,
       -safeLngSpan * 0.45,
       safeLngSpan * 0.45
     )
@@ -195,7 +232,7 @@ export function useHeatMap() {
         polygon.addTo(polygonLayerGroup)
       }
 
-      const centroid = getPolygonCentroid(section.coords)
+      const centroid = getAdjustedCentroid(section)
 
       for (const activeType of activeTypes) {
         const value = getSectionValue(section, activeType)
