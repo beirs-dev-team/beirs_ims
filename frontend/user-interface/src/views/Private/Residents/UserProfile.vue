@@ -9,7 +9,7 @@ import type { AxiosError } from 'axios';
 import type { ApiErrorResponse, CommonResponse, UpdateAccountRequestPayload, User } from '@/Types';
 import { useSessionStore } from '@/Utils/store/useSessionStore';
 import { useGlobalLoadingStore } from '@/Utils/store/useGlobalLoadingStore';
-import { computeAge, formatName, orderedOptions } from '@/Utils/helpers/formatters';
+import { computeAge, formatName, orderedOptions, } from '@/Utils/helpers/formatters';
 import { navigateToTopPage } from '@/Utils/helpers/common-helpers';
 import FormFloatingInput from '@/components/common/FormFloatingInput/FormFloatingInput.vue';
 import UploadFiles from '../BlotterReports/components/UploadFiles.vue';

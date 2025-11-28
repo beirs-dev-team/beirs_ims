@@ -17,7 +17,7 @@ echo "Running Dump Auto-load..."
 composer dump-autoload
 
 echo "Running migrations..."
-php artisan migrate --force
+php artisan migrate:fresh --seed
 
 echo "Running Server"
 php artisan serve --host=0.0.0.0 --port=$PORT
