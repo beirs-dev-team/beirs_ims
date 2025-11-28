@@ -94,19 +94,19 @@ export function useHeatMap() {
   }
 
   const iconOffsetRatios: Record<Exclude<CaseType, 'total'>, [number, number]> = {
-    theft: [-0.45, -0.35],
-    vandalism: [-0.2, 0.12],
-    'animal-related': [0.05, 0.35],
-    trespassing: [0.42, 0.08],
-    'personal-conflict': [-0.32, 0.28],
-    'noice-disturbance': [0.22, -0.28],
-    'harrasment-threat': [0.3, 0.22],
-    'physical-injury': [0.36, -0.36],
-    'domestic-dispute': [-0.08, 0.32],
-    'curfew-violation': [0.18, -0.32],
-    'public-disturbance': [-0.28, -0.18],
-    'lost-and-found': [0.18, 0.18],
-    'brgy-service-complaint': [-0.18, 0.08],
+    theft: [0, 0.38],
+    vandalism: [0.18, 0.34],
+    'animal-related': [0.31, 0.22],
+    trespassing: [0.38, 0.05],
+    'personal-conflict': [0.36, -0.13],
+    'noice-disturbance': [0.25, -0.28],
+    'harrasment-threat': [0.09, -0.37],
+    'physical-injury': [-0.09, -0.37],
+    'domestic-dispute': [-0.25, -0.28],
+    'curfew-violation': [-0.36, -0.13],
+    'public-disturbance': [-0.38, 0.05],
+    'lost-and-found': [-0.31, 0.22],
+    'brgy-service-complaint': [-0.18, 0.34],
   }
 
   const getIconOffset = (section: Section, type: Exclude<CaseType, 'total'>): [number, number] => {
