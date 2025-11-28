@@ -1,5 +1,3 @@
-import type { IncidentType } from '@/Types'
-
 export const formatDateToHuman = (dateIso: string) => {
   if (!dateIso) return
 
@@ -36,8 +34,8 @@ export const maxDate = () => {
   return dateToday()
 }
 
-export const orderedOptions = (optionsList: IncidentType[]) => {
+export const orderedOptions = (optionsList: string[]) => {
   return [...optionsList].sort((a, b) => {
-    return a.id.localeCompare(b.id)
+    return a.localeCompare(b)
   })
 }
