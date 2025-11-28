@@ -94,19 +94,19 @@ export function useHeatMap() {
   }
 
   const iconOffsetRatios: Record<Exclude<CaseType, 'total'>, [number, number]> = {
-    theft: [-0.45, -0.35],
-    vandalism: [-0.2, 0.12],
-    'animal-related': [0.05, 0.35],
-    trespassing: [0.42, 0.08],
-    'personal-conflict': [-0.32, 0.28],
-    'noice-disturbance': [0.22, -0.28],
-    'harrasment-threat': [0.3, 0.22],
-    'physical-injury': [0.36, -0.36],
-    'domestic-dispute': [-0.08, 0.32],
-    'curfew-violation': [0.18, -0.32],
-    'public-disturbance': [-0.28, -0.18],
-    'lost-and-found': [0.18, 0.18],
-    'brgy-service-complaint': [-0.18, 0.08],
+    theft: [0, 0.38],
+    vandalism: [0.18, 0.34],
+    'animal-related': [0.31, 0.22],
+    trespassing: [0.38, 0.05],
+    'personal-conflict': [0.36, -0.13],
+    'noice-disturbance': [0.25, -0.28],
+    'harrasment-threat': [0.09, -0.37],
+    'physical-injury': [-0.09, -0.37],
+    'domestic-dispute': [-0.25, -0.28],
+    'curfew-violation': [-0.36, -0.13],
+    'public-disturbance': [-0.38, 0.05],
+    'lost-and-found': [-0.31, 0.22],
+    'brgy-service-complaint': [-0.18, 0.34],
   }
 
   const getIconOffset = (section: Section, type: Exclude<CaseType, 'total'>): [number, number] => {
@@ -116,21 +116,18 @@ export function useHeatMap() {
     const safeLatSpan = latSpan || 1
     const safeLngSpan = lngSpan || 1
     const minSpan = Math.min(safeLatSpan, safeLngSpan)
-    const maxSpan = Math.max(safeLatSpan, safeLngSpan)
 
-    const baseSpacing = Math.min(Math.max(minSpan * 0.36, 10), 38)
-    const scatterScale = Math.min(Math.max(maxSpan * 0.25, 8), 55)
-
-    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * scatterScale
-    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * scatterScale
+    const jitterScale = Math.min(Math.max(minSpan * 0.08, 2), 12)
+    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * jitterScale
+    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * jitterScale
 
     const latOffset = clamp(
-      latRatio * baseSpacing + jitterLat,
+      latRatio * safeLatSpan * 0.42 + jitterLat,
       -safeLatSpan * 0.45,
       safeLatSpan * 0.45
     )
     const lngOffset = clamp(
-      lngRatio * baseSpacing + jitterLng,
+      lngRatio * safeLngSpan * 0.42 + jitterLng,
       -safeLngSpan * 0.45,
       safeLngSpan * 0.45
     )
