@@ -116,21 +116,18 @@ export function useHeatMap() {
     const safeLatSpan = latSpan || 1
     const safeLngSpan = lngSpan || 1
     const minSpan = Math.min(safeLatSpan, safeLngSpan)
-    const maxSpan = Math.max(safeLatSpan, safeLngSpan)
 
-    const baseSpacing = Math.min(Math.max(minSpan * 0.36, 10), 38)
-    const scatterScale = Math.min(Math.max(maxSpan * 0.25, 8), 55)
-
-    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * scatterScale
-    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * scatterScale
+    const jitterScale = Math.min(Math.max(minSpan * 0.08, 2), 12)
+    const jitterLat = (seededRandom(`${section.id}-${type}-lat`) - 0.5) * jitterScale
+    const jitterLng = (seededRandom(`${section.id}-${type}-lng`) - 0.5) * jitterScale
 
     const latOffset = clamp(
-      latRatio * baseSpacing + jitterLat,
+      latRatio * safeLatSpan * 0.42 + jitterLat,
       -safeLatSpan * 0.45,
       safeLatSpan * 0.45
     )
     const lngOffset = clamp(
-      lngRatio * baseSpacing + jitterLng,
+      lngRatio * safeLngSpan * 0.42 + jitterLng,
       -safeLngSpan * 0.45,
       safeLngSpan * 0.45
     )
