@@ -3,14 +3,14 @@
 namespace App\Notifications\Channels;
 
 use App\Notifications\Contracts\SmsMessage;
-use App\Services\SemaphoreClient;
+use App\Services\TwilioClient;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class SemaphoreChannel
+class TwilioChannel
 {
-    public function __construct(private readonly SemaphoreClient $client)
+    public function __construct(private readonly TwilioClient $client)
     {
     }
 
@@ -30,6 +30,7 @@ class SemaphoreChannel
                 $this->client->sendSms($data['to'], $data['message']);
             } catch (Throwable $e) {
                 Log::warning('SMS delivery skipped; continuing without SMS.', [
+                    'provider' => 'twilio',
                     'notifiable' => get_class($notifiable),
                     'to' => $data['to'],
                     'message' => $data['message'],

@@ -53,7 +53,7 @@ class OtpService
             ];
         }
 
-        $recipient = $user->profile?->routeNotificationForSemaphore();
+        $recipient = $user->profile?->routeNotificationForSms();
         if (!$recipient) {
             return [
                 'ok' => false,

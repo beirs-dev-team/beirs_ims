@@ -63,22 +63,31 @@ class UserProfile extends Model
         return $this->hasOne(GovernmentIdentity::class, 'user_profile_id');
     }
 
-    public function routeNotificationForSemaphore(): ?string
+    public function routeNotificationForSms(): ?string
     {
         if (!$this->mobile_number) {
             return null;
         }
 
-        // Keep only digits (remove + and everything else)
         $digits = preg_replace('/\D/', '', $this->mobile_number);
-
-        // If it starts with 63 already, return as-is
-        if (str_starts_with($digits, '63')) {
-            return $digits;
+        if (!$digits) {
+            return null;
         }
 
-        // Otherwise prepend 63 and trim leading zeros
-        return '63' . ltrim($digits, '0');
+        if (str_starts_with($digits, '63')) {
+            return '+' . $digits;
+        }
+
+        if (str_starts_with($digits, '0')) {
+            return '+63' . ltrim($digits, '0');
+        }
+
+        return '+' . $digits;
+    }
+
+    public function routeNotificationForTwilio(): ?string
+    {
+        return $this->routeNotificationForSms();
     }
 
     /**

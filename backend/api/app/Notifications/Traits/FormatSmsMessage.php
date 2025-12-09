@@ -6,12 +6,7 @@ trait FormatSmsMessage
 {
     public function buildSmsMessage(object $model, object $notifiable, string $releasedStatus): array
     {
-        // Prefer the notifiable's route helper so numbers are normalized (+63, etc.)
-        $mobile = method_exists($notifiable, 'routeNotificationForSemaphore')
-            ? $notifiable->routeNotificationForSemaphore()
-            : (method_exists($notifiable, 'routeNotificationForSemaphore')
-                ? $notifiable->routeNotificationForSemaphore()
-                : ($notifiable->mobile_number ?? null));
+        $mobile = $this->resolveSmsRecipient($notifiable);
 
         if (!$mobile) {
             return [];
@@ -44,5 +39,19 @@ trait FormatSmsMessage
                 $cta
             ),
         ];
+    }
+
+    private function resolveSmsRecipient(object $notifiable): ?string
+    {
+        foreach (['routeNotificationForSms', 'routeNotificationForTwilio'] as $method) {
+            if (method_exists($notifiable, $method)) {
+                $value = $notifiable->{$method}();
+                if (!empty($value)) {
+                    return $value;
+                }
+            }
+        }
+
+        return $notifiable->mobile_number ?? null;
     }
 }

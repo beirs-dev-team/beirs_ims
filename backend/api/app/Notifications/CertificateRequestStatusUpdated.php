@@ -4,7 +4,7 @@ namespace App\Notifications;
 
 use App\Models\Certificates\CertificateRequest;
 use App\Models\Users\User;
-use App\Notifications\Channels\SemaphoreChannel;
+use App\Notifications\Channels\TwilioChannel;
 use App\Notifications\Contracts\SmsMessage;
 use App\Notifications\Traits\FormatSmsMessage;
 use Illuminate\Bus\Queueable;
@@ -33,7 +33,7 @@ class CertificateRequestStatusUpdated extends Notification implements ShouldQueu
      */
     public function via(object $notifiable): array
     {
-        return ['database', SemaphoreChannel::class];
+        return ['database', TwilioChannel::class];
     }
 
     /**

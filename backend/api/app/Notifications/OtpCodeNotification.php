@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Users\UserProfile;
-use App\Notifications\Channels\SemaphoreChannel;
+use App\Notifications\Channels\TwilioChannel;
 use App\Notifications\Contracts\SmsMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -23,7 +23,7 @@ class OtpCodeNotification extends Notification implements SmsMessage
      */
     public function via(object $notifiable): array
     {
-        return [SemaphoreChannel::class];
+        return [TwilioChannel::class];
     }
 
     /**
@@ -33,8 +33,8 @@ class OtpCodeNotification extends Notification implements SmsMessage
     public function toSms($notifiable): array
     {
         return [
-            'to' => $notifiable->routeNotificationForSemaphore(),
-            'message' => sprintf('Your OTP code is %s. It expires in %d minutes.', $this->code, $this->ttlMinutes),
+            'to' => $notifiable->routeNotificationForSms(),
+            'message' => sprintf('BEIRSAlert: Your OTP code is %s. It expires in %d minutes.', $this->code, $this->ttlMinutes),
         ];
     }
 }
