@@ -41,8 +41,6 @@ class AuthController extends Controller
                     'status' => $otpResponse['status'],
                     'user_id' => $user->id,
                     'message' => $otpResponse['message'],
-                    // FOR DEBUGGING PURPOSES ONLY - REMOVE THIS IF SMS IS INTEGRATED
-                    'show_otp' => $otpResponse['show_otp'] ?? null
                 ],
                 $otpResponse['status_code'] ?? 200
             );
